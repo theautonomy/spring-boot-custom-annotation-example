@@ -4,5 +4,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import(MyCustomBeanImportSelector.class)
+
+// Both ways work
+// @Import(MyCustomBeanImportSelector.class)
+
+@Import(MyCustomBeanRegistrar.class)
 public class MyCustomBeanAutoConfiguration {}
