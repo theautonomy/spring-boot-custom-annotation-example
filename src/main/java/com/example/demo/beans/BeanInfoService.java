@@ -1,9 +1,5 @@
 package com.example.demo.beans;
 
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +9,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
 @Service
 public class BeanInfoService {
@@ -48,8 +48,10 @@ public class BeanInfoService {
         Set<String> dependencies = new HashSet<String>();
 
         if (beanFactory.getBeanDefinition(beanName).getDependsOn() != null) {
-            dependencies = Stream.of(beanFactory.getBeanDefinition(beanName).getDependsOn())
-                    .filter(Objects::nonNull).collect(Collectors.toSet());
+            dependencies =
+                    Stream.of(beanFactory.getBeanDefinition(beanName).getDependsOn())
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toSet());
         }
 
         Class<?> beanType = beanFactory.getType(beanName);
@@ -65,18 +67,23 @@ public class BeanInfoService {
     private List<String> getFieldDependencies(Class<?> beanType) {
         return Stream.of(beanType.getDeclaredFields())
                 .filter(field -> !Modifier.isStatic(field.getModifiers()))
-                .map(field -> field.getType().getName()).collect(Collectors.toList());
+                .map(field -> field.getType().getName())
+                .collect(Collectors.toList());
     }
 
     private List<String> getConstructorDependencies(Class<?> beanType) {
         return Stream.of(beanType.getDeclaredConstructors())
                 .flatMap(constructor -> Stream.of(constructor.getParameterTypes()))
-                .map(Class::getName).collect(Collectors.toList());
+                .map(Class::getName)
+                .collect(Collectors.toList());
     }
 
     private List<String> getMethodDependencies(Class<?> beanType) {
-        return Stream.of(beanType.getDeclaredMethods()).filter(
-                method -> method.getName().startsWith("set") && method.getParameterCount() == 1)
+        return Stream.of(beanType.getDeclaredMethods())
+                .filter(
+                        method ->
+                                method.getName().startsWith("set")
+                                        && method.getParameterCount() == 1)
                 .map(method -> method.getParameterTypes()[0].getName())
                 .collect(Collectors.toList());
     }

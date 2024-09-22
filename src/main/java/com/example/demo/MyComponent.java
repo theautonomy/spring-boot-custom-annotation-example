@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MyComponent {
-    
+
     private final MyService service;
 
     public MyComponent(MyService service) {
@@ -14,5 +14,4 @@ public class MyComponent {
     public void doStuff() {
         service.serve();
     }
-    
 }
