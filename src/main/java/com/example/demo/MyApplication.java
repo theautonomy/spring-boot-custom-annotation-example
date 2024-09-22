@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 
 @SpringBootApplication
 public class MyApplication /* implements CommandLineRunner */ {
@@ -18,11 +19,13 @@ public class MyApplication /* implements CommandLineRunner */ {
     }
 
     @Bean
+    @Order(3)
     CommandLineRunner commandLineRunner(MyComponent component) {
         return args -> component.doStuff();
     }
 
     @Bean
+    @Order(2)
     CommandLineRunner commandLineRunnerForPrintingBeans(ApplicationContext applicationContext) {
         return args -> {
             DefaultListableBeanFactory beanFactory =
