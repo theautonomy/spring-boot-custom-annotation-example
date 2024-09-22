@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
@@ -23,17 +24,11 @@ public class MyCustomBeanRegistrar implements ImportBeanDefinitionRegistrar {
                 MyCustomBean myCustomBean = beanClass.getAnnotation(MyCustomBean.class);
                 String beanName = myCustomBean.value().isEmpty() ? beanClass.getSimpleName() : myCustomBean.value();
                 
-                // Use AbstractBeanDefinition and set a supplier to use BeanFactory
-                org.springframework.beans.factory.support.AbstractBeanDefinition abd = 
-                    (org.springframework.beans.factory.support.AbstractBeanDefinition) beanDefinition;
-                abd.setInstanceSupplier(() -> {
-                    try {
-                        return beanClass.getDeclaredConstructor().newInstance();
-                    } catch (Exception e) {
-                        throw new RuntimeException("Failed to create an instance of class " + beanClass.getName(), e);
-                    }
-                });
-                registry.registerBeanDefinition(beanName, abd);
+                RootBeanDefinition factoryBeanDefinition = new RootBeanDefinition(MyFactoryBean.class);
+                factoryBeanDefinition.getConstructorArgumentValues().addGenericArgumentValue(beanClass);
+
+                registry.registerBeanDefinition(beanName, factoryBeanDefinition);
+
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
