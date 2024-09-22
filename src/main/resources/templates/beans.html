@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Beans</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h1>Spring Beans</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Bean Name</th>
+        <th>Bean Type</th>
+        <th>Dependencies</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="bean : ${beans}">
+        <td th:text="${bean.name}">Bean Name</td>
+        <td th:text="${bean.type}">Bean Type</td>
+        <td>
+            <ul>
+                <li th:each="dep : ${bean.dependencies}" th:text="${dep}">Dependency</li>
+            </ul>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
